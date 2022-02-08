@@ -22,7 +22,7 @@
       </div>
     </div>
     <div v-if="videoId" class="row">
-      <div class="col-12 p-3 text-start">Video ID: {{ videoId }}</div>
+      <div class="col-12 text-start p-3 pb-0">Video ID: {{ videoId }}</div>
     </div>
   </div>
 </template>
