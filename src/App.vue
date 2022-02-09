@@ -29,15 +29,9 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
-import HelloWorld from './components/HelloWorld.vue'
-//import youtubedl  from 'youtube-dl-exec'
-import { getSubtitles } from 'youtube-captions-scraper'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  },
   data() {
     return {
       link: 'https://www.youtube.com/watch?v=CWu29PRCUvQ',
@@ -49,14 +43,7 @@ export default {
     getCaption() {
       console.log('getCaption(): link:', this.link)
       this.videoId = this.getVideoId(this.link)
-      console.log('getVideoId(): this.videoId:', this.videoId)
-
-      getSubtitles({
-        videoID: this.videoId, // youtube video id
-        lang: 'en' // default: `en`
-      }).then(captions => {
-        console.log(captions)
-      })
+      console.log('getVideoId(): videoId:', this.videoId)
     },
     getVideoId(link) {
       let startPoint = ''
@@ -74,20 +61,6 @@ export default {
       console.log('getVideoId(): startPoint:', startPoint)
       return link.slice(startPoint, endPoint)
     }
-  },
-  mounted() {
-    // const youtubedl = require('youtube-dl-exec')
-    // const url1 = 'http://www.youtube.com/watch?v=WKsjaOqDXgg'
-    // const url2 = 'https://vimeo.com/6586873'
-    // youtubedl(url1, {
-    //   dumpSingleJson: true,
-    //   noWarnings: true,
-    //   noCallHome: true,
-    //   noCheckCertificate: true,
-    //   preferFreeFormats: true,
-    //   youtubeSkipDashManifest: true,
-    //   referer: url1
-    // }).then(output => console.log(output))
   }
 }
 </script>
