@@ -29,6 +29,7 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { getSubtitles } from 'youtube-captions-scraper'
 
 export default {
   name: 'App',
@@ -44,6 +45,13 @@ export default {
       console.log('getCaption(): link:', this.link)
       this.videoId = this.getVideoId(this.link)
       console.log('getVideoId(): videoId:', this.videoId)
+
+      getSubtitles({
+        videoID: this.videoId, // youtube video id
+        lang: 'en' // default: `en`
+      }).then(captions => {
+        console.log(captions)
+      })
     },
     getVideoId(link) {
       let startPoint = ''
