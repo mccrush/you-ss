@@ -1,0 +1,17 @@
+https:
+//www.youtube.com
+/api
+  / timedtext
+  ? v = D8zhRJ61BRU
+  & asr_langs=de, en, es, fr, id, it, ja, ko, nl, pt, ru, tr, vi
+    & caps=asr
+      & exp=xftt, xctw
+        & xoaf=5
+          & hl=ru
+            & ip=0.0.0.0
+              & ipbits=0
+                & expire=1644429463
+                  & sparams=ip, ipbits, expire, v, asr_langs, caps, exp, xoaf
+                    & signature=A6D393DC787756747F542764634EA56588DA58FD.AE7EE2A11483E464615E95DBA39560CB41D18517
+                      & key=yt8
+                        & lang=en

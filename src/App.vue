@@ -21,37 +21,88 @@
         </div>
       </div>
     </div>
-    <div v-if="videoId" class="row">
-      <div class="col-12 text-start p-3 pb-0">Video ID: {{ videoId }}</div>
+    <div v-if="captions.length" class="row">
+      <div class="col-12 text-start p-3 pb-0">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Что ищем?"
+          v-model="searchText"
+        />
+      </div>
+    </div>
+    <div v-if="searchResult" class="row">
+      <div
+        v-for="(item, index) in searchResult"
+        :key="index + 'st'"
+        class="col-12 text-start p-3 pb-0"
+      >
+        [ {{ item.start }} ]: {{ item.text }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { getSubtitles } from 'youtube-captions-scraper'
+//import { getSubtitles } from 'youtube-captions-scraper'
 
 export default {
   name: 'App',
   data() {
     return {
-      link: 'https://www.youtube.com/watch?v=CWu29PRCUvQ',
+      link: 'https://www.youtube.com/watch?v=D8zhRJ61BRU',
       videoId: '',
-      captions: ''
+      captions: [],
+      searchText: ''
+    }
+  },
+  computed: {
+    searchResult() {
+      return (
+        this.captions.filter(item =>
+          item.text.toUpperCase().includes(this.searchText.toUpperCase())
+        ) || []
+      )
     }
   },
   methods: {
-    getCaption() {
-      console.log('getCaption(): link:', this.link)
-      this.videoId = this.getVideoId(this.link)
-      console.log('getVideoId(): videoId:', this.videoId)
+    async getCaption() {
+      //console.log('getCaption(): link:', this.link)
+      //this.videoId = this.getVideoId(this.link)
+      //console.log('getVideoId(): videoId:', this.videoId)
 
-      getSubtitles({
-        videoID: this.videoId, // youtube video id
-        lang: 'en' // default: `en`
-      }).then(captions => {
-        console.log(captions)
-      })
+      const urlSubXML =
+        'https://www.youtube.com/api/timedtext?v=D8zhRJ61BRU&asr_langs=de,en,es,fr,id,it,ja,ko,nl,pt,ru,tr,vi&caps=asr&exp=xftt,xctw&xoaf=5&hl=ru&ip=0.0.0.0&ipbits=0&expire=1644429463&sparams=ip,ipbits,expire,v,asr_langs,caps,exp,xoaf&signature=A6D393DC787756747F542764634EA56588DA58FD.AE7EE2A11483E464615E95DBA39560CB41D18517&key=yt8&lang=en'
+      // const url =
+      //   'http://www.youtube.com/api/timedtext?type=track=1&name=English v0.1&lang=en&v=CWu29PRCUvQ'
+      // const urlVid =
+      //   'http://www.youtube.com/get_video_ info?video_id=CWu29PRCUvQ'
+      try {
+        const res = await fetch(urlSubXML)
+
+        const subs = await res.text()
+        const ready = new window.DOMParser().parseFromString(subs, 'text/xml')
+
+        //console.log('subs: ', ready)
+        const childNodes =
+          ready.getElementsByTagName('transcript')[0].childNodes
+
+        //console.log('timeStart: ', childNodes)
+
+        for (let i = 0; i < childNodes.length; i++) {
+          //console.log('timeStart: ', childNodes[i].attributes[0].value)
+          //console.log('child: ', childNodes[i].innerHTML)
+          this.captions.push({
+            start: childNodes[i].attributes[0].value,
+            text: childNodes[i].innerHTML
+          })
+        }
+
+        //console.log('this.captions: ', this.captions)
+      } catch (error) {
+        console.error('error: ', error)
+      }
     },
     getVideoId(link) {
       let startPoint = ''
